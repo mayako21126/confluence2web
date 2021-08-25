@@ -8,7 +8,7 @@
 -->
 # Confluence2web
 
-npm start <id> name
+npm start \<id\> name
 
 配置文件在/user和/api里
 
