@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "rm -rf build/* && babel-node index.js",
-    "start2": "rm -rf build/* && babel-node index.js 79872847 ddd"
+    "start2": "rm -rf build/* && babel-node index.js 92866659 API门户-新手指南"
   },
   "author": "Mayako",
   "license": "MIT",
