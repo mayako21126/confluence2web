@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2021-08-25 14:45:06
+ * @LastEditTime: 2022-11-17 09:32:52
  */ 
 const fs = require('fs')
 const request = require('request')
@@ -26,7 +26,11 @@ function downloadImg (idAndName, dest, cb) {
       }
     })
     .pipe(file)
-    .on('error', (err) => console.log('err', err))
+    .on('error', (err) => {
+      console.log('err', err);
+      if (err.code == "EPIPE") {
+        process.exit(0);
+    }})
     .on('finish', () => file.close())
     .on('close', cb)
   })

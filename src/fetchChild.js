@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2021-08-25 13:50:12
+ * @LastEditTime: 2022-11-17 10:46:02
  */ 
 var moment = require('moment')
 const user = require('./user')
@@ -25,10 +25,21 @@ const fetchChild = (id, cb) => {
       }
     }).then(res => res.json())
   }
-
-  var compare = (a, b) => moment(b.lastUpdated).isSameOrBefore(a.lastUpdated) ? 1 : -1
-
-  return fetchTree(id).then((data) => {
+  var fetchTreeSort = (id) => {
+    const url = `${api}/rest/api/content/${id}/child?expand=page`
+    return fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${new Buffer.from('peng.han:ais&ei3Yeihoo5d').toString('base64')}`
+      }
+    }).then(res => res.json())
+  }
+  var compare = function(a,b,sortO){
+    const tmp = sortO.page.results
+    return tmp.map(s=>s.id).indexOf(a.id)<tmp.map(s=>s.id).indexOf(b.id)?-1:1
+  }
+  return fetchTree(id).then(async (data) => {
     var tree = []
     data.results.map(p => {
       tree.push({
@@ -37,14 +48,16 @@ const fetchChild = (id, cb) => {
         lastUpdated: p.history.createdDate,
         children: [] })
     })
-    return tree.sort((a, b) => compare(a, b))
+    const sortO = await fetchTreeSort(id)
+    return tree.sort((a,b)=>compare(a,b,sortO))
   }).then((parents) =>{
     const eachFetch = parents.map(l => {
-      return fetchTree(l.id).then(data => {
+      return fetchTree(l.id).then(async data => {
         if(data.statusCode===500){
           return { id: l.id,
             title: l.title}
         }
+        const sortO = await fetchTreeSort(l.id)
         return {
           id: l.id,
           title: l.title,
@@ -54,7 +67,7 @@ const fetchChild = (id, cb) => {
               title: f.title,
               lastUpdated: f.history.createdDate,
             }
-          }).sort((a, b) => compare(a, b))
+          }).sort((a,b)=>compare(a,b,sortO))
         }
       })
     })

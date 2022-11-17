@@ -4,13 +4,13 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2021-08-25 10:43:15
+ * @LastEditTime: 2022-11-17 10:40:14
  */
 const fs = require('fs')
 const chalk = require('chalk')
 
 function insertCatalog (tree, title, name) {
-  var fristPage = 99999999
+  var fristPage = 99999999999
 
   var link = (id, title, hasChild) => {
     fristPage = +id < fristPage ? id : fristPage
