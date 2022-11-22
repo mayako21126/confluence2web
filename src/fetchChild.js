@@ -4,19 +4,20 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-17 10:46:02
- */ 
+ * @LastEditTime: 2022-11-22 16:50:46
+ */
 var moment = require('moment')
 const user = require('./user')
 const api = require('./api/index')
-
-const fetchChild = (id, cb) => {
+const fetchChild = async (id, getPage) => {
   console.log(id)
-  if (!id) { console.log('- 不给我Id叫我转什么?') }
+  const treeT = []
+  if (!id) {
+    console.log('- 不给我Id叫我转什么?')
+  }
 
-  var fetchTree = (id) => {
+  var fetchTree = async (id) => {
     const url = `${api}/rest/api/content/search?cql=parent=${id}&expand=history.lastUpdated`
-    console.log(url)
     return fetch(url, {
       headers: {
         Accept: 'application/json',
@@ -35,45 +36,46 @@ const fetchChild = (id, cb) => {
       }
     }).then(res => res.json())
   }
-  var compare = function(a,b,sortO){
+  var compare = function (a, b, sortO) {
     const tmp = sortO.page.results
-    return tmp.map(s=>s.id).indexOf(a.id)<tmp.map(s=>s.id).indexOf(b.id)?-1:1
+    return tmp.map(s => s.id).indexOf(a.id) < tmp.map(s => s.id).indexOf(b.id) ? -1 : 1
   }
-  return fetchTree(id).then(async (data) => {
-    var tree = []
-    data.results.map(p => {
-      tree.push({
-        id: p.id,
-        title: p.title,
-        lastUpdated: p.history.createdDate,
-        children: [] })
+  const fn1 = (n) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log(n);
+            resolve(n-1);
+        }, 1000);
     })
-    const sortO = await fetchTreeSort(id)
-    return tree.sort((a,b)=>compare(a,b,sortO))
-  }).then((parents) =>{
-    const eachFetch = parents.map(l => {
-      return fetchTree(l.id).then(async data => {
-        if(data.statusCode===500){
-          return { id: l.id,
-            title: l.title}
-        }
-        const sortO = await fetchTreeSort(l.id)
-        return {
-          id: l.id,
-          title: l.title,
-          children: data.results.map(f => {
-            return {
-              id: f.id,
-              title: f.title,
-              lastUpdated: f.history.createdDate,
+}
+  function getList (id, tree) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const data = await fetchTree(id)
+        // const data = await tmpdata.json()
+        // console.log('33')
+        if (data.statusCode !== 500) {
+          await Promise.all(data.results.map(async p => {
+            const tmp = {
+              id: p.id,
+              title: p.title,
+              lastUpdated: p.history.createdDate,
+              children: []
             }
-          }).sort((a,b)=>compare(a,b,sortO))
+            tmp.children = await getList(p.id, tmp.children)
+            getPage(p.id, tmp.children)
+            tree.push(tmp)
+            const sortO = await fetchTreeSort(id)
+            tree = tree.sort((a, b) => compare(a, b, sortO))
+          }))
         }
-      })
+      } catch (error) {
+        console.log(error)
+      }
+      resolve(tree)
     })
-
-    return Promise.all(eachFetch)
-  })
+  }
+  return getList(id, treeT)
 }
 
 module.exports = fetchChild

@@ -4,8 +4,8 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-17 10:42:04
- */ 
+ * @LastEditTime: 2022-11-22 16:51:04
+ */
 require('dotenv').load()
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -26,21 +26,20 @@ const name = process.argv[3]
 // fetchPageT(id).then((data)=>{
 //   debugger
 // })
-fetchChild(id).then((tree) => {
+fetchChild(id,getPage).then((tree) => {
   console.log(tree)
-  tree.map(l => {
-    getPage(l.id, tree)
-    if(l.children){
-      l.children.map(f => {
-        getPage(f.id, tree)
-      })
-    }
-   
-  })
+  // tree.map(l => {
+  //   getPage(l.id, tree)
+  //   if (l.children) {
+  //     l.children.map(f => {
+  //       getPage(f.id, tree)
+  //     })
+  //   }
+  // })
 })
 
 
-function getPage (child, tree) {
+function getPage(child, tree) {
   if (!fs.existsSync(`./build/${child}`)) {
     fs.mkdirSync(`./build/${child}`)
   }
@@ -56,10 +55,10 @@ function getPage (child, tree) {
     handleStyle.call(this, child)
   }).then(() => {
     new Promise((resolve) => {
-      handleImg.call(this, child)
-      resolve()
-    })
-    .catch(() => {})
+        handleImg.call(this, child)
+        resolve()
+      })
+      .catch(() => {})
   }).then(() => {
     fs.writeFile(`./build/${child}/index.html`, this.page, (err) => {
       console.log(err || `${chalk.cyan(`- got ${child}!`)}`)
