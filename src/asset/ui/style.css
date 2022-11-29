@@ -1,0 +1,89 @@
+html{
+  background-color: #F1F3F6;
+}
+body{
+  background-color: #F1F3F6;
+}
+.container {
+  margin: 40px;
+  padding: 0px;
+  width: calc(100vw - 80px);
+}
+
+.menu_title {
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-family: PingFang-SC-Bold, PingFang-SC;
+  font-weight: bold;
+  color: #333333;
+  line-height: 22px;
+}
+
+.treeview {
+  font-size: 13px;
+  border-top: 1px solid #D5DBE3;
+}
+.treeview span.icon {
+  width: 12px;
+  /* margin-right: 5px; */
+  position: absolute;
+  right: 5px;
+  top: 11px;
+  color: #9BA3AF;
+  font-size: 12px;
+}
+.treeview .list-group-item {
+  border: none;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #3D444F;
+  background-color: #F1F3F6;
+  line-height: 14px;
+  text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.treeview .node-selected {
+  background: #3892ff3e !important;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #4496FF !important;
+}
+
+#contentIf {
+  width: 100%;
+  height: calc(100% - 100px);
+}
+
+iframe::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  display: none;
+}
+
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+  height: 30px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: #3b3b3b;
+  -webkit-border-radius: 16px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  height: 50px;
+  background-color: #666;
+  border: 1px solid #eee;
+  -webkit-border-radius: 6px;
+}

@@ -4,12 +4,13 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2020-07-08 09:34:44
+ * @LastEditTime: 2022-11-25 10:23:58
  */ 
 const api = require('./api/index')
 
 const fetchPage = (id, cb) => {
   const url = `${api}/rest/api/content/${id}?expand=body.export_view`
+  console.log(url)
   return fetch(url, {
     headers: {
       Accept: 'application/json',

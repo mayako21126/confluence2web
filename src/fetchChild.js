@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-22 16:50:46
+ * @LastEditTime: 2022-11-24 16:17:00
  */
 var moment = require('moment')
 const user = require('./user')
@@ -15,7 +15,6 @@ const fetchChild = async (id, getPage) => {
   if (!id) {
     console.log('- 不给我Id叫我转什么?')
   }
-
   var fetchTree = async (id) => {
     const url = `${api}/rest/api/content/search?cql=parent=${id}&expand=history.lastUpdated`
     return fetch(url, {
@@ -40,14 +39,6 @@ const fetchChild = async (id, getPage) => {
     const tmp = sortO.page.results
     return tmp.map(s => s.id).indexOf(a.id) < tmp.map(s => s.id).indexOf(b.id) ? -1 : 1
   }
-  const fn1 = (n) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            console.log(n);
-            resolve(n-1);
-        }, 1000);
-    })
-}
   function getList (id, tree) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -58,12 +49,17 @@ const fetchChild = async (id, getPage) => {
           await Promise.all(data.results.map(async p => {
             const tmp = {
               id: p.id,
+              href:'#'+p.id,
+              text: p.title,
               title: p.title,
               lastUpdated: p.history.createdDate,
               children: []
             }
             tmp.children = await getList(p.id, tmp.children)
             getPage(p.id, tmp.children)
+            if(tmp.children.length>0){
+              tmp.nodes = tmp.children
+            }
             tree.push(tmp)
             const sortO = await fetchTreeSort(id)
             tree = tree.sort((a, b) => compare(a, b, sortO))
