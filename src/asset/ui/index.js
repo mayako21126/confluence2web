@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2022-11-24 15:57:09
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-29 11:48:00
+ * @LastEditTime: 2022-11-29 16:19:28
  */
 $(function () {
   var initSelectableTree = function () {
@@ -15,6 +15,9 @@ $(function () {
       onNodeSelected: function (event, node) {
         window.location.hash = '#'+node.nodeId
        $('#contentIf').attr("src",'./'+node.id+'/index.html');
+       setTimeout(()=>{
+        $('[data-toggle="tooltip"]').tooltip()
+       },500)
       },
       onNodeUnselected: function (event, node) {
         

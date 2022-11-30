@@ -5,12 +5,13 @@ html {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   position: relative;
-  background-color: #F1F3F6;
+  /* background-color: #F1F3F6; */
 }
 
 .main-view {
   display: inline-block;
   width: 100%;
+  padding:20px;
   /* max-width: 900px; */
 }
 
