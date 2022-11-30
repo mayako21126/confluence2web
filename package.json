@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rm -rf build/* && babel-node index.js",
-    "start2": "rm -rf build/* && babel-node index.js 118573959 用户指南"
+    "start": "rm -rf dist/* && babel-node index.js",
+    "start2": "rm -rf dist/* && babel-node index.js 118573959 用户指南"
   },
   "author": "Mayako",
   "license": "MIT",

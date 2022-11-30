@@ -4,13 +4,13 @@
  * @Autor: mayako
  * @Date: 2022-11-23 16:43:21
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-24 17:12:12
+ * @LastEditTime: 2022-11-30 10:44:44
  */
 const path = require('path')
 const fs = require('fs')
 
 const sourceDir = './src/asset'
-const targetDir = './build'
+const targetDir = './dist'
 
 const copy = (sd, td) => {
   // 读取目录下的文件，返回文件名及文件类型{name: 'xxx.txt, [Symbol(type)]: 1 }

@@ -1,10 +1,18 @@
+/*
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: mayako
+ * @Date: 2022-11-23 10:27:45
+ * @LastEditors: mayako
+ * @LastEditTime: 2022-11-30 10:44:03
+ */
 const fs = require('fs')
 
 function handleStyle (id) {
   // fs.createReadStream('./src/asset/child/style.css')
   // .pipe(fs.createWriteStream(`./build/${id}/style.css`))
   fs.createReadStream('./src/asset/child/dot.svg')
-  .pipe(fs.createWriteStream(`./build/${id}/dot.svg`))
+  .pipe(fs.createWriteStream(`./dist/${id}/dot.svg`))
 
   this.page = `
     <head>

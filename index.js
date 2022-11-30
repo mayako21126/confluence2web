@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-29 11:44:16
+ * @LastEditTime: 2022-11-30 10:49:49
  */
 require('dotenv').load()
 require('es6-promise').polyfill()
@@ -26,21 +26,24 @@ const name = process.argv[3]
 
 fetchChild(id,getPage).then((tree) => {
   copyAsset()
-  console.log(tree)
+  // console.log(tree)
   buildIndex(tree,name)
 })
 
 
 function getPage(child, tree) {
-  if (!fs.existsSync(`./build/${child}`)) {
-    fs.mkdirSync(`./build/${child}`)
+  if (!fs.existsSync(`./dist`)) {
+    fs.mkdirSync(`./dist`)
+  }
+  if (!fs.existsSync(`./dist/${child}`)) {
+    fs.mkdirSync(`./dist/${child}`)
   }
 
   fetchPage(child, (page) => {
     this.title = page.title
     this.page = page.body
 
-    fs.writeFile(`./build/${child}/_tmp.html`, this.page, (err) => {})
+    fs.writeFile(`./dist/${child}/_tmp.html`, this.page, (err) => {})
   }).then(() => {
     insertChild.call(this, this.title)
     handleX.call(this, child)
@@ -52,7 +55,7 @@ function getPage(child, tree) {
       })
       .catch(() => {})
   }).then(() => {
-    fs.writeFile(`./build/${child}/index.html`, this.page, (err) => {
+    fs.writeFile(`./dist/${child}/index.html`, this.page, (err) => {
       console.log(err || `${chalk.cyan(`- got ${child}!`)}`)
     })
   }).catch(() => {})
@@ -90,7 +93,7 @@ function buildIndex(tree,name){
   <script src="./ui/index.js"></script>
   </body>
 `
-  fs.writeFile(`./build/index.html`, page, (err) => {
+  fs.writeFile(`./dist/index.html`, page, (err) => {
     console.log(err || chalk.blue('- The landPage was saved!'))
   })
 }
