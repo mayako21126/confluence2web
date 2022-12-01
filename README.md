@@ -10,5 +10,5 @@
 
 npm start \<id\> name
 
-配置文件在/user和/api里
+配置文件在/user和/api里。
 
