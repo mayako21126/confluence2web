@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ app_name }}
+  namespace: {{ app_namespace }}
+  labels:
+    app: {{ app_name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ app_name }}
+  template:
+    metadata:
+      name: {{ app_name }}
+      labels:
+        app: {{ app_name }}
+    spec:
+      containers:
+        - name: {{ app_name }}
+          image: harbor.daocloud.cn/edge/{{ app_name }}:{{ image_tag }}
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 128m
+              memory: '268435456'
+            requests:
+              cpu: 64m
+              memory: '268435456'
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+        - name: harbor.daocloud.cn
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/edge
+                  operator: DoesNotExist

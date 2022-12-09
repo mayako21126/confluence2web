@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: mayako
+ * @Date: 2020-04-30 20:09:26
+ * @LastEditors: mayako
+ * @LastEditTime: 2022-12-08 11:30:24
+ */
 const downloadImg = require('./downloadImg')
 const chalk = require('chalk')
 
@@ -24,7 +32,7 @@ function handleImg (id) {
     if ((/<ac:parameter ac:name="diagramName">([\s\S]*)<\/ac:parameter>/g).test(ac[1])) {
       var imgName = (/<ac:parameter ac:name="diagramName">([\s\S]+?)<\/ac:parameter>/g).exec(ac[1])[1]
       imgName = imgName.replace(/[ :]/g, '')
-      downloadImg(`${id}/${imgName}.png`, `./build/${id}/${imgName}.png`, (info) => {
+      downloadImg(`${id}/${imgName}.png`, `./dist/${id}/${imgName}.png`, (info) => {
         console.log(chalk.green(`- File ${imgName}.png download completed`))
       })
 
@@ -51,7 +59,7 @@ function handleImg (id) {
     imgName = imgName.replace(/[ :]/g, '')
     img = `<img src="./${imgName}" />`
 
-    downloadImg(url, `./build/${id}/${imgName}`, (info) => {
+    downloadImg(url, `./dist/${id}/${imgName}`, (info) => {
       console.log(chalk.green(`- File ${imgName} download completed`))
     })
 
@@ -63,11 +71,11 @@ function handleImg (id) {
       const src = s2.split('"')[0]
       const imgName = decodeURI((/[\s\S]*\/([\s\S]*)/g).exec(s2)[1]).replace(/\?[\x00-\xff]*/g,'')
 
-      downloadImg(src, `./build/${id}/${imgName}`, (info) => {
+      downloadImg(src, `./dist/${id}/${imgName}`, (info) => {
         console.log(chalk.green(`- File ${imgName} download completed`))
       })
 
-      return `${s1}${imgName.replace('?', '%3F')}${s3}`
+      return `<a class="xxa" href='${imgName}'>${s1}${imgName.replace('?', '%3F')}${s3}</a>`
     })
   }
 }

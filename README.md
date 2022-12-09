@@ -6,9 +6,9 @@
  * @LastEditors: mayako
  * @LastEditTime: 2021-08-25 14:58:12
 -->
-# Confluence2web
+# DECHelpWeb
 
 npm start \<id\> name
 
-配置文件在/user和/api里
+配置文件在/user和/api里。
 

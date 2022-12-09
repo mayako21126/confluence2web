@@ -1,0 +1,231 @@
+kind: pipeline
+type: docker
+name: dec-help-manual
+
+concurrency:
+  limit: 1
+
+trigger:
+  event:
+    - push
+    - pull_request
+    - promote
+    - rollback
+  target:
+    exclude:
+      - migrate
+
+steps:
+  - name: 版本发布分支切换
+    image: alpine/git
+    pull: if-not-exists
+    commands:
+      - minorVer=$(echo "$version" | cut -d "." -f 1,2)
+      - echo "发布版本：$version"
+      - echo "release版本：$minorVer"
+      - git fetch
+      - git checkout -b chore origin/release/"$minorVer"
+    when:
+      branch:
+        - release/*
+      event:
+        - promote
+      target:
+        - release
+
+  - name: 构建程序
+    image: node:14.18.0
+    pull: if-not-exists
+    commands:
+      - yarn install --registry=https://registry.npmmirror.com
+      - yarn run start3
+    when:
+      event:
+      - push
+      - pull_request
+      - tag
+      - rollback
+      ref:
+      - refs/heads/master
+      - refs/heads/masterz
+      - refs/heads/develop
+
+  - name: 构建程序(promote)
+    image: node:14.18.0
+    pull: if-not-exists
+    commands:
+      - yarn install --registry=https://registry.npmmirror.com
+      - yarn run start3
+    when:
+      event:
+      - promote
+      ref:
+      - refs/heads/master
+      - refs/heads/masterz
+      - refs/heads/release*
+      - refs/heads/hotfix/*
+
+  - name: 构建镜像
+    #   image: docker:20.10.7
+    image: ncrmro/docker-buildx:19.03.10
+      # privileged: true
+    pull: if-not-exists
+    volumes:
+        - name: docker-cache
+          path: /var/lib/docker
+        - name: docker-sock
+          path: /var/run/docker.sock
+    environment:
+        PLUGIN_INSECURE: "true"
+        DOCKERFILE: build/Dockerfile
+        REPO: harbor.daocloud.cn/edge/${DRONE_REPO_NAME}
+        HUB: harbor.daocloud.cn
+        PLATFORM: linux/arm,linux/arm64,linux/amd64
+        DOCKER_USERNAME:
+          from_secret: docker_username
+        DOCKER_PASSWORD:
+          from_secret: docker_secret
+    commands:
+        - wget https://gitlab.daocloud.cn/peng.han/fe-cache/-/raw/master/buildx-v0.4.1.linux-amd64
+        - mkdir -p ~/.docker/cli-plugins && mv buildx-v0.4.1.linux-amd64  ~/.docker/cli-plugins/docker-buildx && chmod a+x ~/.docker/cli-plugins/docker-buildx
+        - docker buildx install
+        - echo ${DRONE_TAG}
+        - echo "$DOCKER_PASSWORD" | docker login "$HUB" -u "$DOCKER_USERNAME" --password-stdin
+        - docker run --rm --privileged tonistiigi/binfmt:latest --install all
+        - docker buildx create --name=mybuilder-cn --driver docker-container --driver-opt image=dockerpracticesig/buildkit:master --use
+        - docker buildx use mybuilder-cn
+        - docker buildx inspect --bootstrap
+        - docker buildx build -f $DOCKERFILE -t $REPO:${DRONE_BUILD_NUMBER} . --output type=image,push=true
+    when:
+        event:
+        - push
+        - pull_request
+        - tag
+        - rollback
+        ref:
+        - refs/heads/master
+        - refs/heads/masterz
+        - refs/heads/develop
+
+  - name: 构建镜像(promote)
+  #   image: docker:20.10.7
+    image: ncrmro/docker-buildx:19.03.10
+    # privileged: true
+    pull: if-not-exists
+    volumes:
+      - name: docker-cache
+        path: /var/lib/docker
+      - name: docker-sock
+        path: /var/run/docker.sock
+    environment:
+      PLUGIN_INSECURE: "true"
+      DOCKERFILE: build/Dockerfile
+      REPO: harbor.daocloud.cn/edge/${DRONE_REPO_NAME}
+      HUB: harbor.daocloud.cn
+      PLATFORM: linux/arm,linux/arm64,linux/amd64
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_secret
+    commands:
+      - wget https://gitlab.daocloud.cn/peng.han/fe-cache/-/raw/master/buildx-v0.4.1.linux-amd64
+      - mkdir -p ~/.docker/cli-plugins && mv buildx-v0.4.1.linux-amd64  ~/.docker/cli-plugins/docker-buildx && chmod a+x ~/.docker/cli-plugins/docker-buildx
+      - docker buildx install
+      - echo ${DRONE_TAG}
+      - echo "$DOCKER_PASSWORD" | docker login "$HUB" -u "$DOCKER_USERNAME" --password-stdin
+      - docker run --rm --privileged tonistiigi/binfmt:latest --install all
+      - docker buildx create --name=mybuilder-cn --driver docker-container --driver-opt image=dockerpracticesig/buildkit:master --use
+      - docker buildx use mybuilder-cn
+      - docker buildx inspect --bootstrap
+      - docker buildx build --platform $PLATFORM -f $DOCKERFILE -t $REPO:${DRONE_BUILD_NUMBER} . --output type=image,push=true
+    when:
+      branch:
+        - master
+        - masterz
+        - release/*
+      event:
+        - promote
+      target:
+        - test
+
+  - name: 部署开发环境
+    image: danielgormly/drone-plugin-kube
+    pull: if-not-exists
+    settings:
+      template: build/deployment.yaml
+      skip_tls: false
+      server:
+        from_secret: k8s_server_dev
+      ca:
+        from_secret: k8s_ca_dev
+      token:
+        from_secret: k8s_token_dev
+      app_name: ${DRONE_REPO_NAME}
+      app_namespace: kubeedge
+      image_tag: ${DRONE_BUILD_NUMBER}
+    when:
+      event:
+      - push
+      - tag
+      - pull_request
+      ref:
+      - refs/heads/master
+      - refs/heads/develop
+
+  - name: 部署测试环境
+    image: danielgormly/drone-plugin-kube
+    pull: if-not-exists
+    settings:
+      template: build/deployment.yaml
+      skip_tls: false
+      server:
+        from_secret: k8s_server
+      ca:
+        from_secret: k8s_ca
+      token:
+        from_secret: k8s_token
+      app_name: ${DRONE_REPO_NAME}
+      app_namespace: kubeedge
+      image_tag: ${DRONE_BUILD_NUMBER}
+    when:
+      branch:
+        - master
+        - release/*
+      event:
+        - promote
+      target:
+        - test
+
+  - name: 版本发布
+    image: alpine/git
+    pull: if-not-exists
+    commands:
+      - git clone https://gitlab.daocloud.cn/dec/release.git .release
+      - ./.release/build/update.sh module_release
+      - cd .release
+      - ./build/update.sh update_version ${DRONE_REPO_NAME}
+    when:
+      branch:
+        - release/*
+      event:
+        - promote
+      target:
+        - release
+
+services:
+- name: docker-in-docker
+  docker:
+  image: docker:19.03.12-dind
+  command: ["dockerd", "--host", "0.0.0.0", "--experimental"]
+  privileged: true
+
+volumes:
+  - name: cache
+    host:
+      path: /daocloud/drone/cache/edge/helpm-image
+  - name: docker-cache
+    host:
+      path: /daocloud/drone/cache/edge/docker/helpm
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock

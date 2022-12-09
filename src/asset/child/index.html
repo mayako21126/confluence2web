@@ -1,0 +1,44 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: mayako
+ * @Date: 2022-12-08 10:12:18
+ * @LastEditors: mayako
+ * @LastEditTime: 2022-12-08 11:15:50
+-->
+
+<head>
+  <meta charset="utf-8" />
+  <link href="http://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../child/style.css" rel="stylesheet">
+  <link href="../child/imgbox.css" rel="stylesheet">
+  <script src="../ui/jquery-2.2.4.min.js"></script>
+  <script src="../child/jquery.imgbox.js"></script>
+</head>
+
+<body>
+
+  <div class='main-view'>
+    <h1 style='margin: 30px 0 50px;'>1.2 DEC服务配置</h1>
+    <p>
+      1）注册边缘节点并纳管<br />a.登录边缘计算平台。<br />b.选择左边导航栏的&quot;边缘计算&gt;边缘节点&quot;，单击页面右上角的&quot;注册边缘节点&quot;。<br />c.配置边缘节点基本信息。<br /><span
+        style="color: rgb(37,43,58);">填写边缘节点的名称。</span><br /><span
+        class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><a class="xxa"
+          href="worddav6a35f206bf5d8d8807f89d9165fc4ad3.png"><img class="confluence-embedded-image" height="251"
+            width="459" src="worddav6a35f206bf5d8d8807f89d9165fc4ad3.png"></a></span><br /><span
+        style="color: rgb(37,43,58);">单击&quot;注册&quot;，进入如下图页面，可选择在线部署或离线部署方式之一。在线部署直接复制命令到节点端运行即可完成节点纳管，该方式要求边缘节点网络需具备主动访问公网能力；离线部署则是下载安装文件后，将安装文件移动至边缘端后执行安装命令，来进行边缘节点的纳管。</span><br /><span
+        class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image"
+          height="251" width="459" src="worddav44c94f119950a9b49227121b548c5d71.png"></span><br /><span
+        style="color: rgb(37,43,58);">2）创建应用</span><br /><span
+        style="color: rgb(37,43,58);">a.</span>登录边缘计算平台。<br />b.选择左边导航栏的&quot;边缘计算&gt;应用管理&quot;，单击页面右上角的&quot;创建应用&quot;。<br />c.配置应用基本信息。<br />填写应用名称。<br />选择应用部署方式。<br />选择工业智能检测的镜像存放的镜像地址凭证，校验完成后选择对应的镜像版本。<br />配置容器规格。<br />配置环境变量配置。<br />配置访问配置。<br />规格确认后点击创建，即创建应用成功，返回到应用管理页面。<br />d.部署应用
+    </p>
+  </div>
+  <script>
+    $(".xxa").imgbox({
+      alignment: 'auto', // Position - may be auto OR center.
+      hideOnOverlayClick: true, // Hide imgBox when the overlay is clicked.
+      hideOnContentClick: true, // Hide imgBox when the image is clicked.
+      slideshow: false, // Display next/previous controls.
+    });
+  </script>
+</body>
