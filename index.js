@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-12-09 10:04:52
+ * @LastEditTime: 2022-12-09 10:09:56
  */
 require('dotenv').load()
 require('es6-promise').polyfill()
@@ -64,9 +64,9 @@ function buildIndex(tree, name) {
   this.page = `
   <head>
     <meta charset="utf-8" /> 
-    <link href="/ui/bootstrap.min.css" rel="stylesheet">
-    <link href="/ui/bootstrap-treeview.min.css" rel="stylesheet">
-    <link href="/ui/style.css" rel="stylesheet">
+    <link href="./ui/bootstrap.min.css" rel="stylesheet">
+    <link href="./ui/bootstrap-treeview.min.css" rel="stylesheet">
+    <link href="./ui/style.css" rel="stylesheet">
   </head>
   <body>
   <div class="container">
@@ -84,13 +84,13 @@ function buildIndex(tree, name) {
     </div>
   </div>
 </div>
-  <script src="/ui/jquery-2.2.4.min.js"></script>
-  <script src="/ui/bootstrap.min.js"></script>
-  <script src="/ui/bootstrap-treeview.min.js"></script>
+  <script src="./ui/jquery-2.2.4.min.js"></script>
+  <script src="./ui/bootstrap.min.js"></script>
+  <script src="./ui/bootstrap-treeview.min.js"></script>
   <script type="text/javascript">
   var defaultData = ${JSON.stringify(tree)};
   </script>
-  <script src="/ui/index.js"></script>
+  <script src="./ui/index.js"></script>
   </body>
 `
   fs.writeFile(`./dist/index.html`, page, (err) => {
