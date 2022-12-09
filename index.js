@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-12-01 14:30:42
+ * @LastEditTime: 2022-12-09 10:04:52
  */
 require('dotenv').load()
 require('es6-promise').polyfill()
@@ -13,7 +13,6 @@ const chalk = require('chalk')
 const fs = require('fs')
 const fetchChild = require('./src/fetchChild')
 const fetchPage = require('./src/fetchPage')
-const fetchPageT = require('./src/fetchPageT')
 const handleImg = require('./src/handleImg')
 const handleStyle = require('./src/handleStyle')
 const handleX = require('./src/handleX')
@@ -24,10 +23,10 @@ require('figlet').text('Confluence2K', (e, data) => console.log(e || data))
 const id = process.argv[2]
 const name = process.argv[3]
 
-fetchChild(id,getPage).then((tree) => {
+fetchChild(id, getPage).then((tree) => {
   copyAsset()
   // console.log(tree)
-  buildIndex(tree,name)
+  buildIndex(tree, name)
 })
 
 
@@ -61,8 +60,8 @@ function getPage(child, tree) {
   }).catch(() => {})
 }
 
-function buildIndex(tree,name){
-  this.page =`
+function buildIndex(tree, name) {
+  this.page = `
   <head>
     <meta charset="utf-8" /> 
     <link href="/ui/bootstrap.min.css" rel="stylesheet">
@@ -72,13 +71,14 @@ function buildIndex(tree,name){
   <body>
   <div class="container">
   <div class="row">
-    <div class="col-sm-2">
+    <div class="col-sm-2 left-menu">
     <div class="menu_title">${name}</div>
-      <!-- <input type="input" class="form-control" id="input-select-node" placeholder="Identify node..."
-      value="">
-      <button type="button" class="btn btn-success select-node" id="btn-select-node">Select Node</button> -->
       <div id="treeview-selectable" class=""></div>
     </div>
+    <div class="input-group left-search">
+    <span class="input-group-addon" id="basic-addon1"><span class="icon expand-icon glyphicon glyphicon-search"></span></span>
+    <input type="input" class="form-control" id="input-select-node" placeholder="请输入目录章节名" aria-describedby="basic-addon1" value="">
+  </div>
     <div class="col-sm-10">
     <iframe id="contentIf"  allowtransparency="true" frameborder="0" height="260" hspace="0" vspace="0" src="" scrolling=""></iframe>
     </div>

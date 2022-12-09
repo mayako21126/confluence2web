@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2022-11-23 10:27:45
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-30 10:44:03
+ * @LastEditTime: 2022-12-08 14:21:10
  */
 const fs = require('fs')
 
@@ -19,8 +19,18 @@ function handleStyle (id) {
       <meta charset="utf-8" /> 
       <link href="http://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
       <link href="../child/style.css" rel="stylesheet">
+      <link href="../child/imgbox.css" rel="stylesheet">
+      <script src="../ui/jquery-2.2.4.min.js"></script>
+      <script src="../child/jquery.imgbox.js"></script>
+      <script>
+      function resize() {
+      let bh = parent.document.body.clientHeight;
+      let lh = parent.document.querySelector('.left-menu').scrollHeight
+      parent.document.getElementById("contentIf").style.height = bh>lh?bh+'px':lh+'px'; //將子頁面高度傳到父頁面框架
+      }
+  </script>
     </head>
-    <body>
+    <body onload="resize()">
       ${this.page}
     </body>
   `

@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-23 16:32:21
+ * @LastEditTime: 2022-12-08 11:23:07
  */
 const fs = require('fs')
 const chalk = require('chalk')
@@ -50,7 +50,15 @@ function insertChild (title) {
     <div class='main-view'>
       <h1 style='margin: 30px 0 50px;'>${title}</h1>
       ${this.page}
-    </div>`
+    </div>
+    <script>
+    $(".xxa").imgbox({
+      alignment: 'auto', // Position - may be auto OR center.
+      hideOnOverlayClick: true, // Hide imgBox when the overlay is clicked.
+      hideOnContentClick: true, // Hide imgBox when the image is clicked.
+      slideshow: false, // Display next/previous controls.
+    });
+  </script>`
 }
 
 module.exports = insertChild

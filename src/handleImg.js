@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2020-04-30 20:09:26
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-30 10:44:36
+ * @LastEditTime: 2022-12-08 11:30:24
  */
 const downloadImg = require('./downloadImg')
 const chalk = require('chalk')
@@ -75,7 +75,7 @@ function handleImg (id) {
         console.log(chalk.green(`- File ${imgName} download completed`))
       })
 
-      return `${s1}${imgName.replace('?', '%3F')}${s3}`
+      return `<a class="xxa" href='${imgName}'>${s1}${imgName.replace('?', '%3F')}${s3}</a>`
     })
   }
 }

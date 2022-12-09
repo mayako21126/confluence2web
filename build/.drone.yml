@@ -38,7 +38,7 @@ steps:
     pull: if-not-exists
     commands:
       - yarn install --registry=https://registry.npmmirror.com
-      - yarn run start2
+      - yarn run start3
     when:
       event:
       - push
@@ -55,7 +55,7 @@ steps:
     pull: if-not-exists
     commands:
       - yarn install --registry=https://registry.npmmirror.com
-      - yarn run start2
+      - yarn run start3
     when:
       event:
       - promote

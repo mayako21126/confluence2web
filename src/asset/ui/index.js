@@ -4,7 +4,7 @@
  * @Autor: mayako
  * @Date: 2022-11-24 15:57:09
  * @LastEditors: mayako
- * @LastEditTime: 2022-11-29 16:19:28
+ * @LastEditTime: 2022-12-09 09:50:08
  */
 $(function () {
   var initSelectableTree = function () {
@@ -19,19 +19,38 @@ $(function () {
         $('[data-toggle="tooltip"]').tooltip()
        },500)
       },
+      onNodeCollapsed: function (event, node) {
+        setTimeout(() => {
+          document.getElementById("contentIf").contentWindow.resize()
+        }, 100);
+      },
+      onNodeExpanded: function (event, node) {
+        setTimeout(() => {
+          document.getElementById("contentIf").contentWindow.resize()
+        }, 100);
+      },
       onNodeUnselected: function (event, node) {
         
       }
     });
   };
   var $selectableTree = initSelectableTree();
-  // var findSelectableNodes = function () {
-  //   return $selectableTree.treeview('search', [$('#input-select-node').val(), {
-  //     ignoreCase: false,
-  //     exactMatch: false
-  //   }]);
-  // };
-  // var selectableNodes = findSelectableNodes();
+  var findSelectableNodes = function () {
+    return $selectableTree.treeview('search', [$('#input-select-node').val(), {
+      ignoreCase: false,
+      exactMatch: false
+    }]);
+  };
+  var selectableNodes = findSelectableNodes();
+  $('#input-select-node').on('keyup', function (e) {
+    if(e.which===13){
+      if(selectableNodes.length >= 1){
+        $selectableTree.treeview('selectNode', [ selectableNodes]);
+      }
+    }else{
+      selectableNodes = findSelectableNodes();
+    }
+  });
   if(window.location.hash!==''){
     var id = window.location.hash.replace('#','')
     var topNode = function () {

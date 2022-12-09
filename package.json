@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "rm -rf dist/* && babel-node index.js",
-    "start2": "rm -rf dist/* && babel-node index.js 118573959 用户指南"
+    "start2": "rm -rf dist/* && babel-node index.js 143132845 用户指南",
+    "start3": "rm -rf dist/* && babel-node index.js 143132844 DEC用户手册"
   },
   "author": "Mayako",
   "license": "MIT",
